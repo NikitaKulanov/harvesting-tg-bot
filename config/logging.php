@@ -52,6 +52,11 @@ return [
     */
 
     'channels' => [
+        'file_bot' => [
+            'driver' => 'single',
+            'path' => storage_path('logs/bot.log'),
+        ],
+
         'stack' => [
             'driver' => 'stack',
             'channels' => ['single'],

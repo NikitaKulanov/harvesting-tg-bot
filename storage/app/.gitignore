@@ -1,3 +1,6 @@
 *
 !public/
+!img/
+!img/default_video.jpg
+!video/
 !.gitignore

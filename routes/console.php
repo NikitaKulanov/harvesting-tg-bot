@@ -17,3 +17,13 @@ use Illuminate\Support\Facades\Artisan;
 Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
+
+Artisan::command('set:webhook', function () {
+    $action = $this->ask('What mode? [activation/shutdown]', 'activation');
+    $this->comment('Start installing webhook...');
+    $response = app(\App\Http\Controllers\TGController::class)->setWebhookBot(
+        app(\App\Services\Telegram\RequestClient::class),
+        $action
+    );
+    $this->info('Status: ' . $response->status() . '. Payload: ' . $response->content());
+})->purpose('Set webhook for bot TG');
