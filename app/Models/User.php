@@ -109,7 +109,7 @@ class User extends Authenticatable
     public function getFromStorage(array|string $payload, $default = null): array|string|int|null|bool
     {
         if (is_string($payload)) {
-            return array_key_exists($payload, $this->storage) ? $this->storage[$payload] : $default;
+            return $this->storage[$payload] ?? $default;
         } else {
             $array = [];
             foreach ($payload as $item) {
