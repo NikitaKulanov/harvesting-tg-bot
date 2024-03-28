@@ -54,7 +54,7 @@ class Handler extends ExceptionHandler
                     );
                 }
             }
-            Log::info($update->message->text ?? 'qwe');
+
             /**
              * Отправка сообщения в группу с ошибками
              */

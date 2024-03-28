@@ -3,18 +3,17 @@
 namespace App\Services\Telegram\Payloads;
 
 use App\Contracts\Telegram\InputFilePayload;
-use App\Services\Telegram\Payloads\InputFiles\InputFile;
 use App\Services\Telegram\Payloads\InputFiles\InputVideo;
 use App\Services\Telegram\RequestClient;
 
 class VideoPayload extends Payload implements InputFilePayload
 {
-    private InputVideo $inputVideo;
+    private InputVideo|string $inputVideo;
     private string $caption;
 
     const METHOD_API = RequestClient::SEND_VIDEO;
 
-    public function __construct(int $chatId, InputVideo $inputVideo)
+    public function __construct(int $chatId, InputVideo|string $inputVideo)
     {
         $this->chatId = $chatId;
         $this->inputVideo = $inputVideo;
@@ -22,10 +21,10 @@ class VideoPayload extends Payload implements InputFilePayload
 
     /**
      * @param int $chatId
-     * @param InputVideo $inputVideo
+     * @param InputVideo|string $inputVideo
      * @return VideoPayload
      */
-    public static function create(int $chatId, InputVideo $inputVideo): VideoPayload
+    public static function create(int $chatId, InputVideo|string $inputVideo): VideoPayload
     {
         return new self($chatId, $inputVideo);
     }
@@ -50,27 +49,43 @@ class VideoPayload extends Payload implements InputFilePayload
             'thumbnail' => 'attach://' . $this->inputVideo->getThumbnail()->getFilename(),
             'chat_id' => $this->chatId,
             'parse_mode' => $this->parseMode,
-            'reply_markup' => json_encode($this->keyboard)
         ];
 
-        if ($caption = $this->inputVideo->getCaption()) {
-            $array['caption'] = $caption;
+        if ($this->hasFile()) {
+            if ($caption = $this->inputVideo->getCaption()) {
+                $array['caption'] = $caption;
+            }
+            $array['reply_markup'] = json_encode($this->keyboard);
+        } else {
+            $array['video'] = $this->inputVideo;
+            $array['reply_markup'] = $this->keyboard;
+            if (isset($this->caption)) $array['caption'] = $this->caption;
         }
-
-        if (isset($this->caption)) $array['caption'] = $this->caption;
 
         return $array;
     }
 
     /**
-     * @return InputFile[]
+     * @return array|null
      */
-    public function getContentForAttach(): array
+    public function getContentForAttach(): ?array
     {
-        $array = [];
-        $array[] = $this->inputVideo->toArrayForAttach();
-        $this->inputVideo->getThumbnail()->setTitle($this->inputVideo->getThumbnail()->getFilename());
-        $array[] = $this->inputVideo->getThumbnail()->toArrayForAttach();
-        return $array;
+        if ($this->hasFile()) {
+            $array = [];
+            $array[] = $this->inputVideo->toArrayForAttach();
+            $this->inputVideo->getThumbnail()->setTitle($this->inputVideo->getThumbnail()->getFilename());
+            $array[] = $this->inputVideo->getThumbnail()->toArrayForAttach();
+            return $array;
+        } else {
+            return null;
+        }
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFile(): bool
+    {
+        return $this->inputVideo instanceof InputVideo;
     }
 }

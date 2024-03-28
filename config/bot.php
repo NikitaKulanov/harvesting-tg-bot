@@ -58,9 +58,9 @@ return [
     ],
     'channel_subscriptions' =>  [
         [
-            'id' => '@NewAllNewsE',
-            'title' => 'Новости',
-            'url' => 'https://t.me/NewAllNewsE',
+            'id' => '@zapad_smi',
+            'title' => 'Западные СМИ ⚡',
+            'url' => 'https://t.me/zapad_smi',
         ],
     ]
 ];

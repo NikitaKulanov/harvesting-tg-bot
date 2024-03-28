@@ -83,7 +83,7 @@ class RequestClient
      */
     public function sendPayload(Payload $payload): Response
     {
-        if ($payload instanceof InputFilePayload) {
+        if ($payload instanceof InputFilePayload and $payload->hasFile()) {
             $response = Http::attach($payload->getContentForAttach())
                 ->post(
                     $this->urlBot . '/' . $payload::METHOD_API,

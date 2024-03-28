@@ -100,7 +100,7 @@ class User extends Authenticatable
     }
 
     /**
-     * Вернёт false если такого ключа нет в массиве
+     * Get value from storage
      *
      * @param array|string $payload
      * @param null $default

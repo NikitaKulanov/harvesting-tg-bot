@@ -82,4 +82,12 @@ class MediaGroupPayload extends Payload implements InputFilePayload
 
         return $array;
     }
+
+    /**
+     * @return bool
+     */
+    public function hasFile(): bool
+    {
+        return true;
+    }
 }

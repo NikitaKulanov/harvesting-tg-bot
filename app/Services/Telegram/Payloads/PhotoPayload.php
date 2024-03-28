@@ -8,12 +8,12 @@ use App\Services\Telegram\RequestClient;
 
 class PhotoPayload extends Payload implements InputFilePayload
 {
-    private InputPhoto $inputPhoto;
+    private InputPhoto|string $inputPhoto;
     private string $caption;
 
     const METHOD_API = RequestClient::SEND_PHOTO;
 
-    public function __construct(int $chatId, InputPhoto $inputPhoto)
+    public function __construct(int $chatId, InputPhoto|string $inputPhoto)
     {
         $this->inputPhoto = $inputPhoto;
         $this->chatId = $chatId;
@@ -21,10 +21,10 @@ class PhotoPayload extends Payload implements InputFilePayload
 
     /**
      * @param int $chatId
-     * @param InputPhoto $inputPhoto
+     * @param InputPhoto|string $inputPhoto
      * @return PhotoPayload
      */
-    public static function create(int $chatId, InputPhoto $inputPhoto): PhotoPayload
+    public static function create(int $chatId, InputPhoto|string $inputPhoto): PhotoPayload
     {
         return new self($chatId, $inputPhoto);
     }
@@ -47,23 +47,35 @@ class PhotoPayload extends Payload implements InputFilePayload
         $array = [
             'chat_id' => $this->chatId,
             'parse_mode' => $this->parseMode,
-            'reply_markup' => json_encode($this->keyboard)
         ];
 
-        if ($caption = $this->inputPhoto->getCaption()) {
-            $array['caption'] = $caption;
+        if ($this->hasFile()) {
+            if ($caption = $this->inputPhoto->getCaption()) {
+                $array['caption'] = $caption;
+            }
+            $array['reply_markup'] = json_encode($this->keyboard);
+        } else {
+            $array['photo'] = $this->inputPhoto;
+            $array['reply_markup'] = $this->keyboard;
+            if (isset($this->caption)) $array['caption'] = $this->caption;
         }
-
-        if (isset($this->caption)) $array['caption'] = $this->caption;
 
         return $array;
     }
 
     /**
-     * @return array
+     * @return array|null
      */
-    public function getContentForAttach(): array
+    public function getContentForAttach(): ?array
     {
-        return [$this->inputPhoto->toArrayForAttach()];
+        return $this->hasFile() ? [$this->inputPhoto->toArrayForAttach()] : null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function hasFile(): bool
+    {
+        return $this->inputPhoto instanceof InputPhoto;
     }
 }
