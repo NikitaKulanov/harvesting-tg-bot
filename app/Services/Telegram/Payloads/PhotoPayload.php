@@ -51,14 +51,15 @@ class PhotoPayload extends Payload implements InputFilePayload
 
         if ($this->hasFile()) {
             if ($caption = $this->inputPhoto->getCaption()) {
-                $array['caption'] = $caption;
+                $this->caption = $caption;
             }
             $array['reply_markup'] = json_encode($this->keyboard);
         } else {
             $array['photo'] = $this->inputPhoto;
             $array['reply_markup'] = $this->keyboard;
-            if (isset($this->caption)) $array['caption'] = $this->caption;
         }
+
+        if (isset($this->caption)) $array['caption'] = $this->caption;
 
         return $array;
     }

@@ -11,7 +11,9 @@ use App\Services\Telegram\Commands\Command;
 use App\Services\Telegram\DTO\Builder\DTOUpdateBuilder;
 use App\Services\Telegram\DTO\Sender;
 use App\Services\Telegram\DTO\Update;
+use App\Services\Telegram\Payloads\EditMessageMediaPayload;
 use App\Services\Telegram\Payloads\EditMessagePayload;
+use App\Services\Telegram\Payloads\MediaGroupPayload;
 use App\Services\Telegram\Payloads\MessagePayload;
 use App\Services\Telegram\Payloads\PhotoPayload;
 use App\Services\Telegram\Payloads\VideoPayload;
@@ -273,7 +275,17 @@ class Bot
         return $this->requestClient->sendPayload($payload)->json()['result'];
     }
 
+    public function sendMediaGroup(MediaGroupPayload $payload): array
+    {
+        return $this->requestClient->sendPayload($payload)->json()['result'];
+    }
+
     public function editMessageText(EditMessagePayload $payload): array
+    {
+        return $this->requestClient->sendPayload($payload)->json()['result'];
+    }
+
+    public function editMessageMedia(EditMessageMediaPayload $payload): array
     {
         return $this->requestClient->sendPayload($payload)->json()['result'];
     }

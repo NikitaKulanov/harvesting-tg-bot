@@ -53,14 +53,16 @@ class VideoPayload extends Payload implements InputFilePayload
 
         if ($this->hasFile()) {
             if ($caption = $this->inputVideo->getCaption()) {
-                $array['caption'] = $caption;
+                $this->caption = $caption;
             }
             $array['reply_markup'] = json_encode($this->keyboard);
         } else {
             $array['video'] = $this->inputVideo;
             $array['reply_markup'] = $this->keyboard;
-            if (isset($this->caption)) $array['caption'] = $this->caption;
+
         }
+
+        if (isset($this->caption)) $array['caption'] = $this->caption;
 
         return $array;
     }

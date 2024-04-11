@@ -16,6 +16,7 @@ class RequestClient
     const SEND_VIDEO = 'sendVideo';
     const SEND_MEDIA_GROUP = 'sendMediaGroup';
     const EDIT_MESSAGE_TEXT = 'editMessageText';
+    const EDIT_MESSAGE_MEDIA = 'editMessageMedia';
     const GET_CHAT_MEMBER = 'getChatMember';
 
     private readonly string $urlBot;
@@ -27,30 +28,6 @@ class RequestClient
     {
         $this->urlBot = 'https://api.telegram.org/bot' . $token;
     }
-
-//    private function query(string $methodAPI, int $methodHttp = self::GET, array $payload = []): Response
-//    {
-//
-//        $response = match ($methodHttp) {
-//            self::GET =>
-//            $this->httpClient::get(
-//                $this->urlBot . '/' . $methodAPI,
-//                $payload
-//            ),
-//            self::POST =>
-//            $this->httpClient::post(
-//                $this->urlBot . '/' . $methodAPI,
-//                $payload
-//            ),
-//            default => throw new \RuntimeException('This http method does not apply.'),
-//        };
-//
-//        if ($response->serverError() or $response->failed()) {
-//            throw new \RuntimeException('An error occurred on the HTTP client request. Payload: ' . $response->body());
-//        }
-//
-//        return $response;
-//    }
 
     /**
      * @throws TGApiException
