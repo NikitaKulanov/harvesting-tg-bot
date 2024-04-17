@@ -47,7 +47,7 @@ class DTOUpdateBuilder
             isBot: $payload['is_bot'],
             firstName: $payload['first_name'],
             lastName: $payload['last_name'] ?? null,
-            userName: $payload['username' ?? null],
+            userName: $payload['username'] ?? null,
             languageCode: $payload['language_code'] ?? null
         );
     }
